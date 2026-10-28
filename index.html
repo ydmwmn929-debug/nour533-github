@@ -3625,7 +3625,7 @@
                     <div>
                         <h3 class="text-lg font-black">واجهة الباركود</h3>
                         <p id="mobile-scanner-desktop-hint" class="mt-1 text-xs text-gray-500 dark:text-gray-400">اتصل الهاتف والكمبيوتر بشبكة Wi-Fi نفسها ثم امسح الرمز.</p>
-                        <p id="mobile-scanner-web-hint" class="hidden mt-1 text-xs text-gray-500 dark:text-gray-400">وجّه كاميرا الجهاز إلى باركود الصنف أو اختر صورة له.</p>
+                        <p id="mobile-scanner-web-hint" class="hidden mt-1 text-xs text-gray-500 dark:text-gray-400">امسح أي باركود أو رمز QR أو اختر صورة له؛ يظهر محتواه حتى لو لم يكن الصنف مسجلًا.</p>
                         <p id="mobile-scanner-certificate-hint" class="mt-2 text-[11px] text-amber-700 dark:text-amber-300">اتصل الهاتف والكمبيوتر على شبكة Wi‑Fi نفسها. أول مرة: تابع إلى الموقع عند تحذير الشهادة المحلية؛ وإذا لم تعمل الكاميرا استخدم زر فتح كاميرا الموبايل.</p>
                     </div>
                     <button type="button" onclick="closeMobileProductScannerModal()" class="text-gray-400 hover:text-gray-700" aria-label="إغلاق"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -3645,14 +3645,14 @@
                     </div>
                     <div id="mobile-scanner-connected" class="hidden space-y-3 py-10">
                         <i class="fa-solid fa-circle-check text-3xl text-emerald-600"></i>
-                        <p class="text-sm font-bold text-emerald-700 dark:text-emerald-300">الهاتف جاهز للمسح. قرّب أي باركود وسيظهر رقمه هنا حتى لو لم يكن الصنف مسجلًا.</p>
+                        <p class="text-sm font-bold text-emerald-700 dark:text-emerald-300">الهاتف جاهز. امسح أي باركود أو رمز QR مدعوم؛ سيظهر محتواه هنا حتى لو لم يكن الصنف مسجلًا.</p>
                         <p id="mobile-scanner-last-code" class="hidden break-all rounded-lg bg-gray-100 px-3 py-2 font-mono text-lg font-black text-gray-900 dark:bg-gray-700 dark:text-white" dir="ltr"></p>
                     </div>
                     <div id="web-scanner-panel" class="hidden space-y-3">
                         <video id="web-product-scanner-video" class="aspect-video w-full rounded-xl bg-gray-950 object-cover" autoplay muted playsinline></video>
-                        <p id="web-product-scanner-status" class="text-sm font-semibold text-gray-600 dark:text-gray-300" role="status" aria-live="polite">وجّه الكاميرا إلى باركود الصنف.</p>
+                        <p id="web-product-scanner-status" class="text-sm font-semibold text-gray-600 dark:text-gray-300" role="status" aria-live="polite">وجّه الكاميرا إلى أي باركود أو رمز QR.</p>
                         <div id="web-product-scanner-result" class="hidden rounded-lg border border-gray-200 bg-gray-50 p-3 text-right dark:border-gray-700 dark:bg-gray-900">
-                            <p class="text-xs font-bold text-gray-500 dark:text-gray-400">رقم الباركود</p>
+                            <p class="text-xs font-bold text-gray-500 dark:text-gray-400">محتوى الرمز</p>
                             <p id="web-product-scanner-code" class="mt-1 break-all font-mono text-lg font-black text-gray-900 dark:text-white" dir="ltr"></p>
                             <p id="web-product-scanner-match" class="mt-1 text-xs font-semibold text-gray-600 dark:text-gray-300"></p>
                         </div>
@@ -5792,6 +5792,10 @@
             'المبلغ المدفوع': 'Amount paid',
             'المبلغ المتبقي': 'Remaining amount',
             'واجهة الباركود': 'Barcode Interface',
+            'امسح أي باركود أو رمز QR أو اختر صورة له؛ يظهر محتواه حتى لو لم يكن الصنف مسجلًا.': 'Scan any supported barcode or QR code, or choose an image; its contents appear even if the product is not registered.',
+            'الهاتف جاهز. امسح أي باركود أو رمز QR مدعوم؛ سيظهر محتواه هنا حتى لو لم يكن الصنف مسجلًا.': 'The phone is ready. Scan any supported barcode or QR code; its contents will appear here even if the product is not registered.',
+            'وجّه الكاميرا إلى أي باركود أو رمز QR.': 'Point the camera at any barcode or QR code.',
+            'محتوى الرمز': 'Code contents',
             'عرض QR مرة أخرى': 'Show QR again',
             'يظل الرمز ظاهرًا حتى يتصل الهاتف': 'The QR code stays visible until the phone connects',
             'اتصل الهاتف والكمبيوتر بشبكة Wi-Fi نفسها ثم امسح الرمز.': 'Connect the phone and computer to the same Wi-Fi network, then scan the code.',
@@ -17310,7 +17314,7 @@
             if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
                 throw new Error('يجب فتح الموقع عبر HTTPS لاستخدام الكاميرا؛ يمكنك مسح الباركود من صورة.');
             }
-            status.textContent = 'وجّه الكاميرا إلى باركود الصنف.';
+            status.textContent = 'وجّه الكاميرا إلى أي باركود أو رمز QR.';
             browserScannerControls = await browserScannerReader.decodeFromConstraints(
                 { audio: false, video: { facingMode: { ideal: 'environment' } } },
                 video,
@@ -17329,8 +17333,8 @@
         }
 
         function handleBrowserProductScan(value) {
-            const code = String(value || '').trim();
-            if (!code) return;
+            const code = String(value || '');
+            if (!code.trim()) return;
             const now = Date.now();
             if (code === lastBrowserScannedCode && now - lastBrowserScannedAt < 1200) return;
             lastBrowserScannedCode = code;
@@ -17413,8 +17417,9 @@
         }
 
         function handleMobileProductScan(scannedCode) {
-            const code = String(scannedCode || '').trim();
-            if (!code || mobileScannerResultInProgress) return;
+            const code = String(scannedCode || '');
+            const lookupCode = code.trim();
+            if (!lookupCode || mobileScannerResultInProgress) return;
             const lastScannedCode = document.getElementById('mobile-scanner-last-code');
             if (lastScannedCode) {
                 lastScannedCode.textContent = code;
@@ -17425,7 +17430,7 @@
                     ...inventoryLocations,
                     ...inventorySheet.map(item => String(item.location || '').trim())
                 ].filter(Boolean))];
-                const normalizedCode = code.replace(/\\/g, '/').replace(/\/+$/, '').toLocaleLowerCase();
+                const normalizedCode = lookupCode.replace(/\\/g, '/').replace(/\/+$/, '').toLocaleLowerCase();
                 const exactLocation = knownLocations.find(location =>
                     String(location).replace(/\\/g, '/').replace(/\/+$/, '').toLocaleLowerCase() === normalizedCode
                 );
@@ -17437,15 +17442,15 @@
                 if (exactLocation) {
                     showToast(`تم العثور على الرف ${getInventoryLocationParts(exactLocation).shelfName}`, 'success');
                 } else {
-                    showToast(`لم يتم العثور على رف بالرمز ${code}`, 'error');
+                    showToast('لم يتم العثور على رف بهذا الباركود. تم عرض محتواه في الشاشة.', 'error');
                 }
                 return;
             }
             if (mobileScannerTarget === 'pos') {
                 const product = products.find(candidate =>
-                    String(candidate.code || '').trim() === code
-                    || String(candidate.barcode || '').trim() === code
-                    || String(candidate.id ?? '').trim() === code
+                    String(candidate.code || '').trim() === lookupCode
+                    || String(candidate.barcode || '').trim() === lookupCode
+                    || String(candidate.id ?? '').trim() === lookupCode
                 );
                 if (!product) {
                     playProductScanResultSound(false);
@@ -17455,7 +17460,7 @@
                         renderPosSearchResults();
                     }
                     showBrowserProductScanResult(code, 'الصنف غير مسجل في النظام.');
-                    showToast(`لم يتم العثور على صنف بالباركود ${code}`, 'error');
+                    showToast('الصنف غير مسجل. تم عرض محتوى الباركود في الشاشة.', 'error');
                     return;
                 }
                 playProductScanResultSound(true);
@@ -17475,9 +17480,9 @@
                 return;
             }
             const product = products.find(candidate =>
-                String(candidate.code || '').trim() === code
-                || String(candidate.barcode || '').trim() === code
-                || String(candidate.id ?? '').trim() === code
+                String(candidate.code || '').trim() === lookupCode
+                || String(candidate.barcode || '').trim() === lookupCode
+                || String(candidate.id ?? '').trim() === lookupCode
             );
             if (mobileScannerTarget === 'inventory' || mobileScannerTarget === 'products') {
                 const searchId = mobileScannerTarget === 'inventory' ? 'inv-search' : 'prod-search';
@@ -17498,7 +17503,7 @@
                 } else {
                     playProductScanResultSound(false);
                     showBrowserProductScanResult(code, 'الصنف غير مسجل في النظام.');
-                    showToast(`لم يتم العثور على صنف بالباركود ${code}`, 'error');
+                    showToast('الصنف غير مسجل. تم عرض محتوى الباركود في الشاشة.', 'error');
                 }
                 return;
             }
